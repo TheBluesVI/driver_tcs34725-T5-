@@ -1,0 +1,21 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835";
+
+    fragment@0 {
+        target = </axi/pcie@1000120000/rp1/i2c@74000>; // dia chi thanh ghi dang su dung xoa dong nay khi connected
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            tcs34725@29 {
+                compatible = "taos,tcs34725";
+                reg = <0x29>;
+                status = "okay";
+            };
+        };
+    };
+};
+
