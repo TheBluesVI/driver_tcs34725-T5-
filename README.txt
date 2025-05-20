@@ -107,4 +107,87 @@ Notes:
 - Default I2C address for TCS34725 is 0x29.
 - If multiple I2C devices are connected, ensure address is not in conflict.
 
+TCS34725 User-Space Program: Required Libraries and Usage
+==========================================================
+
+This document explains the C standard libraries needed to build a user-space
+program that communicates with the TCS34725 Linux kernel driver via ioctl.
+
+1. <stdio.h>
+-------------
+Purpose:
+- Provides functions like printf(), perror() for printing messages and errors.
+
+Usage:
+- Used to print sensor values and error messages to the terminal.
+
+Example:
+    printf("Clear channel: %u\n", value);
+    perror("Failed to read sensor");
+
+2. <stdlib.h>
+--------------
+Purpose:
+- Provides general-purpose functions like exit() and memory management.
+
+Usage:
+- Used when exiting the program due to failure.
+
+Example:
+    exit(EXIT_FAILURE);
+
+3. <fcntl.h>
+-------------
+Purpose:
+- Contains file control options like open(), O_RDWR.
+
+Usage:
+- Used to open the device file /dev/tcs34725.
+
+Example:
+    int fd = open("/dev/tcs34725", O_RDWR);
+
+4. <unistd.h>
+--------------
+Purpose:
+- Provides access to the POSIX API including functions like close(), read(), write().
+
+Usage:
+- Used to close the device file after operations.
+
+Example:
+    close(fd);
+
+5. <sys/ioctl.h>
+------------------
+Purpose:
+- Enables communication with device drivers using ioctl system calls.
+
+Usage:
+- Used to define and use ioctl commands for reading sensor data.
+
+Example:
+    ioctl(fd, TCS_IOCTL_READ_RED, &value);
+
+6. <stdint.h>
+---------------
+Purpose:
+- Provides fixed-width integer types like uint16_t.
+
+Usage:
+- Ensures portability and correct size when using 16-bit sensor values.
+
+Example:
+    uint16_t value;
+
+Additional Notes:
+------------------
+- Ensure your user program has permission to access /dev/tcs34725 (e.g., run as root or adjust udev rules).
+- You must compile your program using gcc and link the standard libraries:
+
+    Example compile command:
+    gcc -o read_tcs34725 read_tcs34725.c
+
+- Place your ioctl definitions (magic number and command codes) in your user program or in a shared header file.
+
 Happy Hacking!
